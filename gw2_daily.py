@@ -13,6 +13,7 @@ def request_dailies():
 	url = "https://api.guildwars2.com/v2/achievements/daily"
 	#page = urllib.request.urlopen(url)
 	#dailies = json.loads(page.read().decode('utf-8'))
+	#return dailies
 
 #tell quotebot your level, the category of daily you want, if you want to see all dailies, and how to sort the dailies
 def quote_bot_line(level, cat='', showall=False, sortby=''):
