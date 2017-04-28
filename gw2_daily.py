@@ -1,57 +1,54 @@
 import urllib.request
 import json
-'''To Do:
-	-find dictionary with quest IDs and quest names
-	-implement dynamnic sorting?
-'''
 
-def request_dailies():
-	with open('gw2.json', 'r') as f:
-		dailies = json.loads(f.read())
-		return dailies
-	#commented out due to firewall issues, comment in for real use. Code was tested once and worked, but not sure if this is the correct URL
-	url = "https://api.guildwars2.com/v2/achievements/daily"
-	#page = urllib.request.urlopen(url)
-	#dailies = json.loads(page.read().decode('utf-8'))
-	#return dailies
-
-#tell quotebot your level, the category of daily you want, if you want to see all dailies, and how to sort the dailies
-def quote_bot_line(level, cat='', showall=False, sortby=''):
-	'''Accepts an integer level, and three optional parameters: a category of daily, a showall boolean, and a 'sort by' string [yet to be implemented].
-	Checks inputs for errors then calls get_dailies() for the category passed (or all types).'''
-	try:
-		int(level)
-	except (ValueError, SyntaxError):
-		print ("You entered '{}' as your level. Please enter an integer level.".format(level))
-		quit()
-	if level not in range(1,101):
-		print ("Warning: unacceptable level ('{}'). Please enter an integer between 0 and 100.".format(level))
-	dailies = request_dailies()
-	if cat == '' or showall == True:
-		for cat in dailies:
-			get_dailies(level, cat, showall, dailies)
-	else:
-		try:
-			c = cat.lower()
-			get_dailies(level, c, showall, dailies)
-		except KeyError:
-			print ("You entered an invalid category! Acceptable categories: pve, pvp, wvw, fractals, special")
-			quit()
-
-def get_dailies(level, cat, showall, dailies):
-	'''Accepts integer level, type string, and showall booelan from quote_bot_line(). Prints sorted dailies matching input criteria.'''
-	print (cat.upper())
-	sorted_dailies = sorted(dailies[cat], key = lambda x: x['level']['min'])
-	for x in sorted_dailies:
-		if showall == True:
-			print ('ID: {0}\tLevel: [{1},{2}]\tNeeded: {3}'.format(x['id'], x['level']['min'], x['level']['max'], x['required_access']))
+def get_daily_info(id_list):
+	base_url = 'https://api.guildwars2.com/v2/achievements?ids='
+	url = base_url + ','.join(str(x) for x in id_list)
+	page = urllib.request.urlopen(url).read().decode('utf-8', 'ignore')
+	if '—' in page:
+		page = page.replace('—', '-')
+	data = json.loads(page)
+	quest_name = []
+	to_complete = []
+	bits = []
+	for quest in data:
+		tier = ''
+		quest_name.append(quest['name'])
+		if '  ' in quest['requirement']:
+			for y in quest['tiers']:
+				tier += str(y['count']) + '/'
+				tier = tier[:-1]
+			req = quest['requirement'].split('  ')
+			merged = str(req[0]+" "+tier+" "+req[1])
+			to_complete.append(merged)
 		else:
-			if level in range(int(x['level']['min']), int(x['level']['max'])):
-				print ('ID: {0}\tLevel: [{1},{2}]\tNeeded: {3}'.format(x['id'], x['level']['min'], x['level']['max'], x['required_access']))
-	print ()
-	
-def make_id_list(daily_list, idlist):
-	idlist.append(daily_list['id'])
+			to_complete.append(quest['requirement'])
+		if 'bits' in quest:
+			quest_bits = []
+			for each in quest['bits']:
+				quest_bits.append(each['text'])
+			bits.append(quest_bits)
+		else:
+			bits.append(' ')
+	assert len(quest_name) == len(to_complete) == len(id_list), "Warning: Lists of ID, name, requirements not all same length"
+	min_length = min(len(quest_name), len(to_complete), len(id_list))
+	i = 0
+	while i < min_length:
+		print ('ID: '+str(id_list[i])+' '+quest_name[i]+': '+to_complete[i])
+		print (bits[i])
+		print ()
+		i += 1
+			
+def get_dailies():
+	dailies_url = 'https://api.guildwars2.com/v2/achievements/daily'
+	page = urllib.request.urlopen(dailies_url)
+	dailies = json.loads(page.read().decode('utf-8'))
+	idlist = []
+	for x in dailies:
+		sorted_dailies = sorted(dailies[x], key = lambda x: x['id'])
+		for y in sorted_dailies:
+			idlist.append(y['id'])
+	idlist.sort()
 	return idlist
 
-quote_bot_line(1, showall=True)
+get_daily_info(get_dailies())
