@@ -1,5 +1,8 @@
 import urllib.request
+import datetime
 import json
+
+'''need to update to version 1.01 from home PC'''
 
 def get_daily_info(id_list):
 	base_url = 'https://api.guildwars2.com/v2/achievements?ids='
@@ -33,6 +36,7 @@ def get_daily_info(id_list):
 	assert len(quest_name) == len(to_complete) == len(id_list), "Warning: Lists of ID, name, requirements not all same length"
 	min_length = min(len(quest_name), len(to_complete), len(id_list))
 	i = 0
+	print (str(datetime.datetime.now().strftime('%A %m/%d/%y')+" Dailies:")
 	while i < min_length:
 		print ('ID: '+str(id_list[i])+' '+quest_name[i]+': '+to_complete[i])
 		print (bits[i])
