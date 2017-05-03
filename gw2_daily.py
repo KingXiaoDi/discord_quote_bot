@@ -2,8 +2,7 @@ import urllib.request
 import json
 
 def get_daily_info(id_list):
-	base_url = 'https://api.guildwars2.com/v2/achievements?ids='
-	url = base_url + ','.join(str(x) for x in id_list)
+	url = 'https://api.guildwars2.com/v2/achievements?ids=' + ','.join(str(x) for x in id_list)
 	page = urllib.request.urlopen(url).read().decode('utf-8', 'ignore')
 	if '—' in page:
 		page = page.replace('—', '-')
@@ -24,13 +23,10 @@ def get_daily_info(id_list):
 		i += 1
 			
 def get_dailies():
-	dailies_url = 'https://api.guildwars2.com/v2/achievements/daily'
-	page = urllib.request.urlopen(dailies_url)
-	dailies = json.loads(page.read().decode('utf-8'))
+	dailies = json.loads(urllib.request.urlopen('https://api.guildwars2.com/v2/achievements/daily').read().decode('utf-8'))
 	id_list = []
 	for x in dailies:
-		sorted_dailies = sorted(dailies[x], key = lambda x: x['id'])
-		for y in sorted_dailies:
+		for y in sorted(dailies[x], key = lambda x: x['id']):
 			if y['id'] not in id_list:
 				id_list.append(y['id'])
 	id_list.sort()
