@@ -14,7 +14,7 @@ def get_daily_info(id_list):
 			id_list.remove(quest['id'])
 		else:
 			quest_name.append(quest['name'])
-	assert len(quest_name) == len(id_list), "Warning: Lists of ID, name, requirements not all same length"
+	assert len(quest_name) == len(id_list), "Warning: Lists of IDs and quest names are the same length"
 	for i in range(len(id_list)):
 		while len(str(id_list[i])) <4:
 			id_list[i] = str(id_list[i])+' '
