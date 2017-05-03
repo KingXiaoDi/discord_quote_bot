@@ -19,7 +19,6 @@ def get_daily_info(id_list):
 	assert len(quest_name) == len(id_list), "Warning: Lists of ID, name, requirements not all same length"
 	print (str(datetime.datetime.now().strftime('%A %m/%d/%y'))+" Dailies ("+str(len(id_list))+") [Valid until 16:00 EST]:")
 	print (str(skipped_counter)+" dailies removed due to tier level <> 4.")
-	print ()
 	for i in range(len(id_list)):
 		while len(str(id_list[i])) <4:
 			id_list[i] = str(id_list[i])+' '
