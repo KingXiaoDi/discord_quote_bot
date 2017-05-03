@@ -17,10 +17,10 @@ def get_daily_info(id_list):
 	for i in range(len(id_list)):
 		while len(str(id_list[i])) <4:
 			id_list[i] = str(id_list[i])+' '
-	i = 0
-	while i < min(len(quest_name), len(id_list)):
-		print ('ID: '+str(id_list[i])+' '+quest_name[i])
-		i += 1
+	counter = 0
+	while counter < min(len(quest_name), len(id_list)):
+		print ('ID: '+str(id_list[counter])+' '+quest_name[counter])#+': '+to_complete[counter])
+		counter += 1
 			
 def get_dailies():
 	dailies = json.loads(urllib.request.urlopen('https://api.guildwars2.com/v2/achievements/daily').read().decode('utf-8'))
@@ -31,5 +31,3 @@ def get_dailies():
 				id_list.append(y['id'])
 	id_list.sort()
 	return id_list
-
-get_daily_info(get_dailies())
