@@ -27,15 +27,20 @@ def get_daily_info(id_list):
 		print ('ID: '+str(id_list[counter])+'\t'+quest_name[counter])
 		counter += 1
 	
-def get_dailies():
+def get_dailies(style=''):
 	dailies = json.loads(urllib.request.urlopen('https://api.guildwars2.com/v2/achievements/daily').read().decode('utf-8'))
 	id_list = []
-	for x in dailies:
-		for y in sorted(dailies[x], key = lambda x: x['id']):
-			if y['id'] not in id_list:
-				id_list.append(y['id'])
+	if style != '':
+		for x in dailies[style]:
+			for y in sorted(dailies[x], key = lambda x: x['id']):
+				if y['id'] not in id_list:
+					id_list.append(y['id'])
+	else:
+		for x in dailies:
+			for y in sorted(dailies[x], key = lambda x: x['id']):
+				if y['id'] not in id_list:
+					id_list.append(y['id'])
 	id_list.sort()
 	return id_list
 	
 get_daily_info(get_dailies())
-
