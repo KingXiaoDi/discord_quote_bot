@@ -44,6 +44,7 @@ def get_daily_info(*styles, show_all=False):
 							print ('ID: '+'{:4d}\t {}'.format(id, low_level_fractals[id]))
 						print ()
 					else: 
+						print ()
 						print ("{} dailies removed due to tier level <> 4. Include 'show_all=True' to show all dailies.".format(len(low_level_fractals)))
 						print ()
 				else:
