@@ -36,12 +36,16 @@ def get_daily_info(*styles, show_all=False):
 				for quest in quest_dict:
 					if quest in id_dict[style]:
 						print ('ID: '+'{:4d}\t {}'.format(quest, quest_dict[quest]))
-				if style == 'fractals' and show_all == True:
-					print ()
-					print ("{} dailies removed due to tier level <> 4. Include 'show_all=True' to show all dailies.".format(len(low_level_fractals)))
-					for id in low_level_fractals:
-						print ('ID: '+'{:4d}\t {}'.format(id, low_level_fractals[id]))
-					print ()
+				if style == 'fractals':
+					if show_all == True:
+						print ()
+						print ("{} dailies removed due to tier level <> 4.".format(len(low_level_fractals)))
+						for id in low_level_fractals:
+							print ('ID: '+'{:4d}\t {}'.format(id, low_level_fractals[id]))
+						print ()
+					else: 
+						print ("{} dailies removed due to tier level <> 4. Include 'show_all=True' to show all dailies.".format(len(low_level_fractals)))
+						print ()
 				else:
 					print ()
 
@@ -82,4 +86,4 @@ def check_time():
 	hours_diff = diff/100
 	return " [Valid until 0:00 UTC (20:00 EST/17:00 PST) on {}]".format(datetime.datetime.utcnow().date().strftime('%A %m/%d/%y'))
 
-get_daily_info(show_all=True)
+get_daily_info(show_all=False)
